@@ -3,11 +3,11 @@
   extern int yylex();
 %}
 
-%token <int> INT
-%token STRING
+%token INT
+%token <char *> STRING
 %token LIST
 %token DICT
-%token NUMBER
+%token <long long> NUMBER
 %token END
 
 %union {
