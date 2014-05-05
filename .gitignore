@@ -23,3 +23,5 @@
 *.hex
 
 build
+.waf-*
+.lock-*
