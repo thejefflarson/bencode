@@ -14,8 +14,8 @@ LIST  "l"
 DICT  "d"
 END   "e"
 
-STRING [\-0-9]+:
-NUMBER [\-0-9]+
+STRING -?[1-9][0-9]*:
+NUMBER -?[1-9][0-9]*
 
 %%
 

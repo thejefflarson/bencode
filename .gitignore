@@ -22,6 +22,11 @@
 *.x86_64
 *.hex
 
+parser.c
+parser.h
+lexer.c
+lexer.h
+
 build
 .waf-*
 .lock-*
