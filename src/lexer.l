@@ -19,19 +19,15 @@ NUMBER -?[1-9][0-9]*
 
 %%
 
-{NUMBER} {
-  long long num = strtoll(yytext, yytext + 256, 10);
-  if(perror(errno == EINVAL || ERANGE)) yyerror();
-  yylval->int = num;
-  return NUMBER;
-}
+{NUMBER} { return NUMBER; }
 
 {STRING} {
   long long num = strtoll(yytext, yytext + 256, 10);
   // set error or return from function
   if(errno == EINVAL || ERANGE) yyerror();
-  strndup(yylval->str, num, yytext);
-  yyless(yyleng - num);
+
+  for(long long i = 0; i < num; i++) input();
+
   return STRING;
 }
 
