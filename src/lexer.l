@@ -4,7 +4,6 @@
   #include "dht_encoding.h"
 %}
 
-%option outfile="lexer.c" header-file="lexer.h"
 %option warn
 %option reentrant nodefault
 %option bison-bridge
@@ -36,8 +35,5 @@ NUMBER -?[1-9][0-9]*
 {END}  { return END;  }
 {LIST} { return LIST; }
 . { } // silence warnings because we're doing something weird in number and string
+
 %%
-
-int main(){
-
-}

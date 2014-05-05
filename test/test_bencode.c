@@ -10,5 +10,16 @@
   }\
 } while(0)
 
-#define start_test printf("1..%i\n", __COUNTER__)
+#define start_test printf("1..%i\n", __COUNTER__);
 
+static void
+test_decode(){
+
+  ok(res == 0, "can decode");
+}
+
+void
+main(){
+  start_test
+  test_decode();
+}

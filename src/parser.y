@@ -1,4 +1,6 @@
-{%
+%{
+
+#include "bencode.h"
 
 %}
 
@@ -7,6 +9,7 @@
 %token LIST
 %token DICT
 %token NUMBER
+%token END
 
 %%
 
@@ -37,4 +40,5 @@ member:
 | list
 | dictionary
 ;
+
 %%
