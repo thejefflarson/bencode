@@ -1,6 +1,8 @@
 %{
   #include "bencode.h"
+  #include <stdio.h>
   extern int yylex();
+  void yyerror(const char *s);
 %}
 
 %token INT
@@ -46,3 +48,8 @@ member:
 ;
 
 %%
+
+ void
+ yyerror(const char *s) {
+   fprintf (stderr, "%s\n", s);
+ }

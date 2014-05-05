@@ -1,4 +1,4 @@
-#include <memory.h>
+#include <stdlib.h>
 #include "bencode.h"
 
 be_node *

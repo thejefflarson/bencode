@@ -22,11 +22,12 @@ NUMBER -?[1-9][0-9]*
 {NUMBER} { return NUMBER; }
 
 {STRING} {
-  long long num = strtoll(yytext, *yytext + 256, 10);
+  char *end_ptr;
+  long long num = strtoll(yytext, &end_ptr, 10);
   // set error or return from function
-  if(errno == EINVAL || errno == ERANGE) yyerror(yyscanner);
+  // if(errno == EINVAL || errno == ERANGE) yyerror();
 
-  for(long long i = 0; i < num; i++) input();
+  for(long long i = 0; i < num; i++) input(yyscanner);
 
   return STRING;
 }
