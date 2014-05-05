@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define ok(test, message) do {\
   int __test_count = __COUNTER__ + 1;\
@@ -14,12 +15,13 @@
 
 static void
 test_decode(){
-
+  int res = 1;
   ok(res == 0, "can decode");
 }
 
-void
+int
 main(){
   start_test
   test_decode();
+  return 0;
 }

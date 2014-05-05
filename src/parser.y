@@ -1,15 +1,19 @@
 %{
-
-#include "bencode.h"
-
+  #include "bencode.h"
+  extern int yylex();
 %}
 
-%token INT
+%token <int> INT
 %token STRING
 %token LIST
 %token DICT
 %token NUMBER
 %token END
+
+%union {
+  long long num;
+  char *string;
+}
 
 %%
 

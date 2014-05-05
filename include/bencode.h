@@ -13,13 +13,13 @@ typedef struct {
   struct dht_be_node *val;
 } be_dict;
 
-typedef struct dht_be_node {
+typedef struct be_node {
   be_type type;
   union {
     long long i;
     char* str;
-    dht_be_node **list;
-    dht_be_dict *dict;
+    struct be_node **list;
+    be_dict *dict;
   } val;
 } be_node;
 

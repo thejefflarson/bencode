@@ -12,7 +12,7 @@ def configure(conf):
     conf.load('bison')
     conf.load('flex')
 
-    conf.env.append_unique('CFLAGS', ['-std=c99', '-Wall', '-Wextra', '-Werror', '-g'])
+    conf.env.append_unique('CFLAGS', ['-std=c99', '-Wall', '-Werror', '-g'])
     conf.env.append_value('INCLUDES', ['include'])
 
 

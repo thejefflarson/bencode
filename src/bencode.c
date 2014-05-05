@@ -1,4 +1,5 @@
 #include <memory.h>
+#include "bencode.h"
 
 be_node *
 be_decode(char *str, long long size){
