@@ -2,29 +2,39 @@
 
 %}
 
+%token INT
+%token STRING
 %token LIST
+%token DICT
 %token NUMBER
-
 
 %%
 
 list:
-  LIST member END
+  LIST list_value END
+
+list_value:
+  member
+| member list_value
+;
 
 dictionary:
-  DICT member END
+  DICT dict_value END
+;
+
+dict_value:
+  STRING member
+| STRING member dict_value
+;
 
 integer:
   INT NUMBER END
-
-dict_value:
-  member member
+;
 
 member:
-|  integer
-|  STRING
-|  dict_value
-|  list
-|  member
+  integer
+| STRING
+| list
+| dictionary
 ;
 %%
