@@ -2,26 +2,26 @@
 #define BENCODE_H_
 
 typedef enum {
-  DHT_BE_STR,
-  DHT_BE_INT,
-  DHT_BE_LIST,
-  DHT_BE_DICT
+  BE_STR,
+  BE_INT,
+  BE_LIST,
+  BE_DICT
 } be_type;
-
-typedef struct {
-  char *key;
-  struct dht_be_node *val;
-} be_dict;
 
 typedef struct be_node {
   be_type type;
   union {
     long long i;
     char* str;
-    struct be_node **list;
+    struct be_node *list;
     be_dict *dict;
   } val;
 } be_node;
+
+typedef struct {
+  char *key;
+  struct be_node *val;
+} be_dict_value;
 
 be_node *
 be_decode(char *str, int size);
