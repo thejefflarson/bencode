@@ -18,7 +18,7 @@ typedef struct be_node {
   union {
     long long i;
     char* str;
-    struct be_node *list;
+    struct be_node **list;
     be_dict_value *dict;
   } val;
 } be_node;
