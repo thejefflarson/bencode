@@ -45,9 +45,9 @@ list(be_node *node, struct state *st){
     return 0;
   }
 }
-
+// needts to be satack based
 int
-member(be_node *node, struct state *st){
+member(be_node *root, struct state *st){
   int err = 0;
   switch(st->curr[0]) {
     case 'i':
