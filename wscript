@@ -17,26 +17,26 @@ def configure(conf):
 
 
 def build(bld):
-    sources = bld.path.ant_glob(['src/*.c'])
+    sources = bld.path.ant_glob(['./bencode.c'])
 
     bld.shlib(
         features='c cshlib',
         source=sources,
-        includes=['src', 'include'],
+        includes=['.'],
         target='bencode'
     )
 
     bld.stlib(
         features='c cstlib',
         source=sources,
-        includes=['src', 'include'],
+        includes=['.'],
         target='bencode'
     )
 
     bld.program(
         features='c',
-        source='test/test_bencode.c',
-        includes=['src', 'include'],
+        source='test_bencode.c',
+        includes=['.'],
         use='bencode',
         target='test_bencode.tap',
         install_path=None
