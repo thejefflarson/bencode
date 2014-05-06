@@ -19,8 +19,13 @@
 
 %%
 
+bencode:
+  member
+;
+
 list:
   LIST list_value END
+;
 
 list_value:
   member
@@ -49,7 +54,7 @@ member:
 
 %%
 
- void
- yyerror(const char *s) {
-   fprintf (stderr, "%s\n", s);
- }
+void
+yyerror(const char *s) {
+  fprintf (stderr, "%s\n", s);
+}
