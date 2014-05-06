@@ -12,17 +12,20 @@
   }\
 } while(0)
 
-#define start_test printf("1..%i\n", __COUNTER__);
+#define start_test printf("1..%i\n", __COUNTER__)
+
 
 static void
-test_decode(){
-  int res = 1;
-  ok(res == 0, "can decode");
+test_integer(){
+  be_node *node = be_decode("i42e", 4);
+  ok(node != NULL, "decoded integer without errors");
+  ok(node->type == BE_INT, "returned an integer");
+  ok(node->val.i == 42, "returned correct value");
 }
 
 int
 main(){
-  start_test
-  test_decode();
+  start_test;
+  test_integer();
   return 0;
 }
