@@ -24,7 +24,7 @@ typedef struct be_node {
 } be_node;
 
 be_node *
-be_decode(char *str, long long size);
+be_decode(char *str, int size);
 
 char *
 be_encode(be_node *node);
