@@ -1,12 +1,7 @@
 #include <stdlib.h>
 #include "bencode.h"
 
-struct state {
-  long long parsed;
-  long long size;
-  char *buf;
-  char *curr;
-};
+
 
 static void
 seek(struct state *st, int amount){
@@ -45,38 +40,60 @@ list(be_node *node, struct state *st){
     return 0;
   }
 }
-// needts to be satack based
-int
-member(be_node *root, struct state *st){
-  int err = 0;
-  switch(st->curr[0]) {
-    case 'i':
-      err = integer(node, st);
-      break;
-    case 'l':
-      err = list(node, st);
-      break;
-    case 'd':
-      err = dict(node, st);
-      break;
-    case 'e':
-      // member shouldn't get this
-      err = 1;
-      break;
-    default:
-      // we've hit a string
-      err = string(node, st);
-  }
-  return err;
-}
 
+struct state {
+  long long parsed;
+  long long size;
+  char *buf;
+  char *curr;
+};
+
+struct stack {
+  be_node *node;
+  struct stack *next;
+};
 
 be_node *
 be_decode(const char *str, unsigned int size){
+  struct stack *stk = calloc(1, sizeof(struct stack));
+  st->node = root;
+  st->next = NULL;
+
   struct state st;
+  st.buf = st.curr = str;
   st.parsed = st.size = size;
-  st.buf    = st.cur  = str;
-  be_node *node = calloc(1, sizeof(be_node));
+
+  while(st.size > 0) {
+    switch(st->curr[0]) {
+      case 'i':
+        err = integer(node, st);
+        break;
+      case 'l':
+        err = list(node, st);
+        break;
+      case 'd':
+        err = dict(node, st);
+        break;
+      case 'e':
+        // member shouldn't get this
+        err = 1;
+        break;
+      default:
+        // we've hit a string
+        err = string(node, st);
+    }
+    if(err) {
+      struct stack *tmp;
+      while(stk != NULL) {
+        tmp = stk->next;
+        free(stk);
+        stk = tmp;
+      }
+      be_free(root);
+      return NULL;
+    }
+    st.size--;
+  }
   return member(node, &st);
 }
 
