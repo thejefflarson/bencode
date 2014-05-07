@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <errno.h>
 #include "bencode.h"
 
 typedef struct be_stack {
@@ -31,7 +32,6 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
       if(tmp == NULL) return NULL;
       parent->node->val.list = tmp;
       parent->node->val.list[parent->node->length - 1] = stack->node;
-      free(stack);
       parent->next = NULL;
       break;
     }
@@ -49,13 +49,21 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
     case BE_STR: {
       char *end_ptr;
       long i = strtol(str, &end_ptr, 10);
-      if(parsed[i] != ':') return NULL;
-      // todo check error
+      *parsed += end_ptr - str;
+
+      // TODO free stack node
+      if(errno == EINVAL || errno == ERANGE)
+        return NULL;
+      if(str[*parsed] != ':')
+        return NULL;
+
+      (*parsed)++;
       parent->node->type = BE_STR;
       parent->node->val.str = strndup(str + *parsed, i);
-      free(stack);
-      parent->next = NULL;
       *parsed += i;
+      // TODO: check return
+      free(stack->node);
+      parent->next = NULL;
       break;
     }
   }
@@ -63,12 +71,12 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
   return parent;
 }
 
+// TODO: error checking
 be_node_t *
 be_decode(const char *str, uint64_t size){
   uint64_t parsed = 0;
   be_stack_t *stack = calloc(1, sizeof(be_stack_t));
-  int err = 0;
-  while(parsed < size && !err) {
+  while(parsed < size) {
     switch(str[parsed]) {
       case 'i':
         stack = push(stack, BE_INT);
@@ -79,7 +87,6 @@ be_decode(const char *str, uint64_t size){
         stack = push(stack, BE_LIST);
         parsed++;
         break;
-      // TODO:
       case 'd':
         stack = push(stack, BE_DICT);
         parsed++;
@@ -91,8 +98,6 @@ be_decode(const char *str, uint64_t size){
         if(str[parsed] == '-' || (str[parsed] > '0' && str[parsed] <= '9')) {
           stack = push(stack, BE_STR);
           stack = value(stack, str, &parsed);
-        } else {
-          err = 1;
         }
         break;
     }
