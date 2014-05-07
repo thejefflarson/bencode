@@ -17,10 +17,10 @@
 
 static void
 test_integer(){
-  be_node *node = be_decode("i42e", 4);
+  be_node_t *node = be_decode("i42e", 4);
   ok(node != NULL, "decoded integer without errors");
-  ok(node->type == BE_INT, "returned an integer");
   ok(node->val.i == 42, "returned correct value");
+  ok(node->type == BE_INT, "returned an integer");
 }
 
 int
