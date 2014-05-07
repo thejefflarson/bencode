@@ -114,6 +114,7 @@ be_encode(be_node_t *node){
 
 void
 be_free(be_node_t *node) {
-  if(node->type == BE_STR) free(node->val.str);
+  if(node->type == BE_STR)
+    free(node->val.str);
   free(node);
 }
