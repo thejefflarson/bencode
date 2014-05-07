@@ -6,7 +6,7 @@
 #define ok(test, message) do {\
   int __test_count = __COUNTER__ + 1;\
   if(test) {\
-    printf("ok %i - %s, %s: %i\n", __test_count, message, __FILE__, __LINE__);\
+    printf("ok %i\n", __test_count);\
   } else {\
     printf("not ok %i - %s, %s: %i\n", __test_count, message, __FILE__, __LINE__);\
     exit(1);\
@@ -33,10 +33,24 @@ test_string(){
   be_free(node);
 }
 
+static void
+test_list(){
+  be_node_t *node = be_decode("l7:tolstoyi42ee", 9);
+  ok(node != NULL, "decoded list without errors");
+  ok(node->type == BE_LIST, "returned a list");
+  ok(node->length == 2, "right number of elements");
+  ok(node->val.list[0]->type == BE_INT, "first element is a string");
+  ok(strncmp("tolstoy", node->val.list[1]->val.str, 7) == 0, "is tolstoy");
+  ok(node->val.list[1]->type == BE_INT, "second element is an int");
+  ok(node->val.list[1]->val.i == 42, "is 42");
+  be_free(node);
+}
+
 int
 main(){
   start_test;
   test_integer();
   test_string();
+  test_list();
   return 0;
 }

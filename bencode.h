@@ -25,6 +25,7 @@ struct be_node {
     struct be_node **list;
     be_dict_value_t *dict;
   } val;
+  // only set for dicts and lists
   uint64_t length;
 };
 

@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
+#include <stdio.h>
 #include "bencode.h"
 
 typedef struct be_stack {
@@ -12,19 +13,21 @@ typedef struct be_stack {
 
 static be_stack_t *
 push(be_stack_t *stack, be_type type){
+  printf("push %i\n", type);
   be_stack_t *stk = calloc(1, sizeof(be_stack_t));
   be_node_t *node = calloc(1, sizeof(be_node_t));
+  node->length = 1;
   stk->node = node;
   stk->node->type = type;
-  stack->next = stk;
-  return stack;
+  stk->next = stack;
+  return stk;
 }
 
 static be_stack_t *
 value(be_stack_t *stack, const char *str, uint64_t *parsed){
   be_stack_t *parent = stack->next;
-  if(stack->next == NULL) return NULL;
-  switch(parent->node->type) {
+  if(stack->next == NULL) return NULL; // empty stack somehow
+  switch(stack->node->type) {
     case BE_LIST: {
       be_node_t **tmp;
       parent->node->length += 1;
