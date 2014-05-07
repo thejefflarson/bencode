@@ -13,7 +13,6 @@ typedef struct be_stack {
 
 static be_stack_t *
 push(be_stack_t *stack, be_type type){
-  printf("push %i\n", type);
   be_stack_t *stk = calloc(1, sizeof(be_stack_t));
   be_node_t *node = calloc(1, sizeof(be_node_t));
   node->length = 1;
@@ -79,6 +78,7 @@ be_node_t *
 be_decode(const char *str, uint64_t size){
   uint64_t parsed = 0;
   be_stack_t *stack = calloc(1, sizeof(be_stack_t));
+  stack->node = calloc(1, sizeof(be_node_t));
   while(parsed < size) {
     switch(str[parsed]) {
       case 'i':
