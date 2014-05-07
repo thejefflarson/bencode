@@ -12,7 +12,7 @@ typedef struct be_stack {
 static be_stack_t *
 push(be_stack_t *stack, be_type type){
   be_stack_t *stk = calloc(1, sizeof(be_stack_t));
-  be_node_t *node = calloc(1, sizeof(be_stack_t));
+  be_node_t *node = calloc(1, sizeof(be_node_t));
   stk->node = node;
   stk->node->type = type;
   stack->next = stk;
@@ -97,7 +97,9 @@ be_decode(const char *str, uint64_t size){
         break;
     }
   }
-  return stack->node;
+  be_node_t *node = stack->node;
+  free(stack);
+  return node;
 }
 
 char *
@@ -107,5 +109,5 @@ be_encode(be_node_t *node){
 
 void
 be_free(be_node_t *node) {
-
+  free(node);
 }

@@ -21,6 +21,7 @@ test_integer(){
   ok(node != NULL, "decoded integer without errors");
   ok(node->val.i == 42, "returned correct value");
   ok(node->type == BE_INT, "returned an integer");
+  be_free(node);
 }
 
 int
