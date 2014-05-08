@@ -12,6 +12,16 @@ typedef enum {
 
 typedef struct be_node be_node_t;
 
+typedef struct be_list_node {
+  be_node_t *node;
+  struct be_list_node *next;
+} be_list_node_t;
+
+typedef struct {
+  uint64_t length;
+  be_list_node_t **values;
+} be_dict_t;
+
 typedef struct {
   char *key;
   be_node_t *val;
@@ -22,11 +32,9 @@ struct be_node {
   union {
     long long i;
     char* str;
-    struct be_node **list;
-    be_dict_value_t *dict;
+    be_list_node_t *list;
+    be_dict_t *dict;
   } val;
-  // only set for dicts and lists
-  uint64_t length;
 };
 
 be_node_t *

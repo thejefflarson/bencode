@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
@@ -13,9 +14,9 @@ typedef struct be_stack {
 
 static be_stack_t *
 push(be_stack_t *stack, be_type type){
+  printf("push %i\n", type);
   be_stack_t *stk = calloc(1, sizeof(be_stack_t));
   be_node_t *node = calloc(1, sizeof(be_node_t));
-  node->length = 1;
   stk->node = node;
   stk->node->type = type;
   stk->next = stack;
@@ -23,17 +24,31 @@ push(be_stack_t *stack, be_type type){
 }
 
 static be_stack_t *
+pop(be_stack_t *stack) {
+  printf("pop %i\n", stack->node->type);
+  be_stack_t *parent = stack->next;
+  free(stack);
+  free(stack->node);
+  parent->next = NULL;
+  return parent;
+}
+
+static be_stack_t *
 value(be_stack_t *stack, const char *str, uint64_t *parsed){
   be_stack_t *parent = stack->next;
-  if(stack->next == NULL) return NULL; // empty stack somehow
+
+  // TODO: free stack
+  if(stack->next == NULL)
+    return NULL;
+
   switch(stack->node->type) {
     case BE_LIST: {
-      be_node_t **tmp;
-      parent->node->length += 1;
-      tmp = realloc(parent->node->val.list, parent->node->length);
-      if(tmp == NULL) return NULL;
-      parent->node->val.list = tmp;
-      parent->node->val.list[parent->node->length - 1] = stack->node;
+      be_list_node_t *tail = parent->node->val.list;
+      while(tail && tail->next)
+        tail = tail->next;
+      tail = calloc(1, sizeof(be_list_node_t));
+      tail->next = NULL;
+      parent->node = tail->node;
       parent->next = NULL;
       break;
     }
@@ -43,8 +58,6 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
       char *end_ptr;
       parent->node->type = BE_INT;
       parent->node->val.i = strtoll(str + *parsed, &end_ptr, 10);
-      free(stack->node);
-      parent->next = NULL;
       *parsed += end_ptr - str;
       break;
     }
@@ -53,7 +66,7 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
       long i = strtol(str, &end_ptr, 10);
       *parsed += end_ptr - str;
 
-      // TODO free stack node
+      // TODO free stack node when we get to these errors
       if(errno == EINVAL || errno == ERANGE)
         return NULL;
       if(str[*parsed] != ':')
@@ -64,12 +77,10 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
       parent->node->val.str = strndup(str + *parsed, i);
       *parsed += i;
       // TODO: check return
-      free(stack->node);
-      parent->next = NULL;
       break;
     }
   }
-  free(stack);
+  pop(stack);
   return parent;
 }
 
