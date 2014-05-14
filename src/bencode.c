@@ -25,8 +25,8 @@ push(be_stack_t *stack, be_type type){
 static be_stack_t *
 pop(be_stack_t *stack) {
   be_stack_t *parent = stack->next;
-  free(stack);
   free(stack->node);
+  free(stack);
   parent->next = NULL;
   return parent;
 }
@@ -117,6 +117,7 @@ be_decode(const char *str, uint64_t size){
 
 char *
 be_encode(be_node_t *node){
+  (void) node;
   return "";
 }
 
