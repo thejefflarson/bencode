@@ -33,26 +33,27 @@ test_string(){
   be_free(node);
 }
 
-// static void
-// test_list(){
-//   be_node_t *node = be_decode("l7:tolstoyi42ee", 9);
-//   ok(node != NULL, "decoded list without errors");
-//   ok(node->type == BE_LIST, "returned a list");
-//   int i = 0;
-//   for(be_list_node_t *tail = node->val.list; tail->next; tail = tail->next, i++);
-//   ok(i == 2, "right number of elements");
-//   ok(node->val.list->node->type == BE_INT, "first element is a string");
-//   ok(strncmp("tolstoy", node->val.list->node->val.str, 7) == 0, "is tolstoy");
-//   ok(node->val.list->next->node->type == BE_INT, "second element is an int");
-//   ok(node->val.list->next->node->val.i == 42, "is 42");
-//   be_free(node);
-// }
+static void
+test_list(){
+  be_node_t *node = be_decode("l7:tolstoyi42ee", 9);
+  ok(node != NULL, "decoded list without errors");
+  printf("%i\n", node->type);
+  ok(node->type == BE_LIST, "returned a list");
+  int i = 0;
+  for(be_list_node_t *tail = node->val.list; tail->next; tail = tail->next, i++);
+  ok(i == 2, "right number of elements");
+  ok(node->val.list->node->type == BE_INT, "first element is a string");
+  ok(strncmp("tolstoy", node->val.list->node->val.str, 7) == 0, "is tolstoy");
+  ok(node->val.list->next->node->type == BE_INT, "second element is an int");
+  ok(node->val.list->next->node->val.i == 42, "is 42");
+  be_free(node);
+}
 
 int
 main(){
   start_test;
   test_integer();
   test_string();
-  // test_list();
+  test_list();
   return 0;
 }

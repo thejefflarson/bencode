@@ -14,7 +14,6 @@ typedef struct be_stack {
 
 static be_stack_t *
 push(be_stack_t *stack, be_type type){
-  printf("push %i\n", type);
   be_stack_t *stk = calloc(1, sizeof(be_stack_t));
   be_node_t *node = calloc(1, sizeof(be_node_t));
   stk->node = node;
@@ -25,7 +24,6 @@ push(be_stack_t *stack, be_type type){
 
 static be_stack_t *
 pop(be_stack_t *stack) {
-  printf("pop %i\n", stack->node->type);
   be_stack_t *parent = stack->next;
   free(stack);
   free(stack->node);
@@ -34,22 +32,16 @@ pop(be_stack_t *stack) {
 }
 
 static be_stack_t *
-value(be_stack_t *stack, const char *str, uint64_t *parsed){
+value(be_stack_t *stack, const char *str, uint64_t *parsed, uint64_t size){
   be_stack_t *parent = stack->next;
-
-  // TODO: free stack
-  if(stack->next == NULL)
-    return NULL;
 
   switch(stack->node->type) {
     case BE_LIST: {
       be_list_node_t *tail = parent->node->val.list;
-      while(tail && tail->next)
+      while(tail->next)
         tail = tail->next;
-      tail = calloc(1, sizeof(be_list_node_t));
-      tail->next = NULL;
+      tail->next = calloc(1, sizeof(be_list_node_t));
       parent->node = tail->node;
-      parent->next = NULL;
       break;
     }
     case BE_DICT:
@@ -63,20 +55,22 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed){
     }
     case BE_STR: {
       char *end_ptr;
-      long i = strtol(str, &end_ptr, 10);
-      *parsed += end_ptr - str;
+      long i = strtol(&str[*parsed], &end_ptr, 10);
+      *parsed += end_ptr - &str[*parsed];
 
-      // TODO free stack node when we get to these errors
       if(errno == EINVAL || errno == ERANGE)
-        return NULL;
+        break;
       if(str[*parsed] != ':')
-        return NULL;
+        break;
+      if(*parsed > size)
+        break;
 
-      (*parsed)++;
+      *parsed += 1;
       parent->node->type = BE_STR;
+      // TODO: check return
       parent->node->val.str = strndup(str + *parsed, i);
       *parsed += i;
-      // TODO: check return
+
       break;
     }
   }
@@ -95,7 +89,7 @@ be_decode(const char *str, uint64_t size){
       case 'i':
         stack = push(stack, BE_INT);
         parsed++;
-        stack = value(stack, str, &parsed);
+        stack = value(stack, str, &parsed, size);
         break;
       case 'l':
         stack = push(stack, BE_LIST);
@@ -106,12 +100,12 @@ be_decode(const char *str, uint64_t size){
         parsed++;
         break;
       case 'e':
-        stack = value(stack, str, &parsed);
+        pop(stack);
         break;
       default:
         if(str[parsed] == '-' || (str[parsed] > '0' && str[parsed] <= '9')) {
           stack = push(stack, BE_STR);
-          stack = value(stack, str, &parsed);
+          stack = value(stack, str, &parsed, size);
         }
         break;
     }
