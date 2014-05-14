@@ -1,13 +1,12 @@
 %{
-  #include "scanner.h"
-
+#include "bencode.h"
 %}
 
 %union {
   int num;
   char *str;
-  be_dict *dict;
-  be_list *list;
+  be_dict_t *dict;
+  be_list_node_t *list;
 }
 
 %token DICT
@@ -15,6 +14,7 @@
 %token END
 %token STRING
 %token INT
+%token NUMBER
 
 %%
 
@@ -23,27 +23,30 @@ bencode:
 ;
 
 list:
-  list_value
+  LIST list_value END
 ;
 
 list_value:
   member
-| list_value
+| member list_value
 ;
 
 dict:
-  member
-  dict_value
+  DICT dict_value END
 ;
 
 dict_value:
-  member
-| dict_value
+  STRING member
+| STRING member dict_value
+;
+
+integer:
+  INT NUMBER END
 ;
 
 member:
-  number
-| string
+  integer
+| STRING
 | dict
 | list
 ;

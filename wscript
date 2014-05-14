@@ -3,16 +3,20 @@
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('flex')
+    opt.load('bison')
 
 
 def configure(conf):
     conf.load('compiler_c')
+    conf.load('flex')
+    conf.load('bison')
     conf.env.append_unique('CFLAGS', ['-std=c99', '-Wall', '-Wextra', '-Werror', '-g'])
-    conf.env.append_value('INCLUDES', ['include'])
+    conf.env.append_value('INCLUDES', ['include', 'src'])
 
 
 def build(bld):
-    sources = bld.path.ant_glob(['bencode.c'])
+    sources = bld.path.ant_glob(['src/bencode.c', 'scanner.l', 'src/parser.y'])
 
     bld.shlib(
         features='c cshlib',
@@ -28,7 +32,7 @@ def build(bld):
 
     bld.program(
         features='c',
-        source='test_bencode.c',
+        source='test/test_bencode.c',
         use='bencode',
         target='test_bencode',
         install_path=None

@@ -18,10 +18,9 @@ STRING -?[1-9][0-9]*:
 
 {NUMBER} { return NUMBER; }
 {STRING} { return STRING; }
-{DICT} { return DICT; }
-{LIST} { return LIST; }
-{END}  { return END;  }
-
+{DICT}   { return DICT; }
+{LIST}   { return LIST; }
+{END}    { return END;  }
 
 %%
 
