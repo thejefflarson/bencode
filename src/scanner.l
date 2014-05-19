@@ -20,7 +20,7 @@ STRING -?[1-9][0-9]*:
   yylval = strtoll(str + *parsed, &end_ptr, 10);
 
   if(errno == EINVAL || errno == ERANGE)
-    error("string in valid or too big");
+    return error;
 
   return NUMBER;
 }
@@ -28,11 +28,11 @@ STRING -?[1-9][0-9]*:
   long i = strtoll(str + *parsed, &end_ptr, 10);
 
   if(errno == EINVAL || errno == ERANGE)
-    break;
+    return error;
   if(str[*parsed] != ':')
-    break;
+    return error;
   if(*parsed > size)
-    break;
+    return error;
 
   yylval = calloc(i, sizeof(char));
 
