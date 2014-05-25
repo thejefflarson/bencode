@@ -3,13 +3,11 @@
 
 def options(opt):
     opt.load('compiler_c')
-    opt.load('flex')
     opt.load('bison')
 
 
 def configure(conf):
     conf.load('compiler_c')
-    conf.load('flex')
     conf.load('bison')
     conf.env.append_unique('CFLAGS', ['-std=c99', '-Wall', '-Wextra', '-Werror', '-g'])
     conf.env.append_value('INCLUDES', ['include', 'src'])

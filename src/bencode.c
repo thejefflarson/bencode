@@ -78,7 +78,7 @@ value(be_stack_t *stack, const char *str, uint64_t *parsed, uint64_t size){
   return parent;
 }
 
-// TODO: error checking
+// Make this a proper scanner that feeds into bison
 be_node_t *
 be_decode(const char *str, uint64_t size){
   uint64_t parsed = 0;
