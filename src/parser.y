@@ -1,5 +1,7 @@
 %{
 #include "bencode.h"
+
+int yylex(YYSTYPE *lvalp, YYLTYPE *llocp);
 %}
 
 %union {
@@ -8,6 +10,8 @@
   be_dict_t *dict;
   be_list_node_t *list;
 }
+
+%define api.pure full
 
 %token DICT
 %token LIST
@@ -52,3 +56,28 @@ member:
 ;
 
 %%
+
+int
+yylex(YYSTYPE *lvalp, YYLTYPE *llocp){
+  switch(str[parsed]) {
+    case 'i':
+      return INT;
+      break;
+    case 'l':
+      return LIST;
+      parsed++;
+      break;
+    case 'd':
+      return DICT;
+      break;
+    case 'e':
+      return END;
+      break;
+    default:
+      if(str[parsed] == '-' || (str[parsed] > '0' && str[parsed] <= '9')) {
+        return STRING;
+      }
+      break;
+  }
+  return node;
+}
