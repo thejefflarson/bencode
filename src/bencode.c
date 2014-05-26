@@ -9,7 +9,10 @@
 // Make this a proper scanner that feeds into bison
 be_node_t *
 be_decode(){
-  return yyparse();
+  be_node_t node = calloc(1, sizeof(be_node_t));
+  if(node == NULL) return node;
+  yyparse(node);
+  return node;
 }
 
 char *

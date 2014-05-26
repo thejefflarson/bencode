@@ -1,7 +1,7 @@
 %{
 #include "bencode.h"
 
-int yylex(YYSTYPE *lvalp, YYLTYPE *llocp);
+int bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp);
 %}
 
 %union {
@@ -12,7 +12,7 @@ int yylex(YYSTYPE *lvalp, YYLTYPE *llocp);
 }
 
 %define api.pure full
-
+%option prefix="bencode"
 %token DICT
 %token LIST
 %token END
@@ -58,7 +58,7 @@ member:
 %%
 
 int
-yylex(YYSTYPE *lvalp, YYLTYPE *llocp){
+bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp){
   switch(str[parsed]) {
     case 'i':
       return INT;
