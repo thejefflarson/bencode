@@ -1,24 +1,22 @@
 %{
 #include "bencode.h"
-#define YYSTYPE char const *
-int bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp);
+#include "lexer.h"
+#define YYSTYPE be_node_t;
 %}
 
-%union {
-  int num;
-  char *str;
-  be_dict_t *dict;
-  be_list_node_t *list;
-}
+/* for bison 2.3, which is default on os x, guh */
+%pure-parser
+%locations
 
-%define api.pure full
-%option prefix="bencode"
+%name-prefix="bencode_"
 %token DICT
 %token LIST
 %token END
 %token STRING
 %token INT
 %token NUMBER
+
+%type <be_node_t *> member;
 
 %%
 
@@ -49,16 +47,16 @@ integer:
 ;
 
 member:
-  integer
-| STRING
-| dict
-| list
+  integer { $$ = calloc(1, sizeof(be_node_t)); }
+| STRING  { $$ = calloc(1, sizeof(be_node_t)); }
+| dict    { $$ = calloc(1, sizeof(be_node_t)); }
+| list    { $$ = calloc(1, sizeof(be_node_t)); }
 ;
 
 %%
 
-int
-bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp){
+yytokentype
+bencode_lex(YYSTYPE *yylval, YYLTYPE *llocp){
   switch(str[parsed]) {
     case 'i':
       return INT;
@@ -78,8 +76,9 @@ bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp){
         if(errno == ERANGE)
           return ERROR;
 
+        str += ep - str;
 
-        if(ep[0] == ':') {
+        if(str[0] == ':') {
           if(num + parsed > length)
             return ERROR;
 
@@ -90,7 +89,7 @@ bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp){
 
           yylval = val;
           return STRING;
-        } else if(ep[0] == 'e') {
+        } else if(str[0] == 'e') {
           yylval = num;
           return NUMBER;
         }

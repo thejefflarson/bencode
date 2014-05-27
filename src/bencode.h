@@ -35,7 +35,7 @@ struct be_node {
     be_list_node_t *list;
     be_dict_t *dict;
   } val;
-};
+} be_node_t;
 
 be_node_t *
 be_decode(const char *str, uint64_t size);
