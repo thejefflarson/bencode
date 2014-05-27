@@ -1,6 +1,6 @@
 %{
 #include "bencode.h"
-
+#define YYSTYPE char const *
 int bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp);
 %}
 
@@ -62,22 +62,40 @@ bencode_lex(YYSTYPE *lvalp, YYLTYPE *llocp){
   switch(str[parsed]) {
     case 'i':
       return INT;
-      break;
     case 'l':
       return LIST;
-      parsed++;
-      break;
     case 'd':
       return DICT;
-      break;
     case 'e':
       return END;
-      break;
     default:
       if(str[parsed] == '-' || (str[parsed] > '0' && str[parsed] <= '9')) {
-        return STRING;
+        char *ep;
+        long long num = strtoll(str, ep, 10);
+
+        if(errno == EINVAL)
+          return ERROR;
+        if(errno == ERANGE)
+          return ERROR;
+
+
+        if(ep[0] == ':') {
+          if(num + parsed > length)
+            return ERROR;
+
+          char *val = strndup(ep + 1, num);
+
+          if(val == NULL)
+            return ERROR;
+
+          yylval = val;
+          return STRING;
+        } else if(ep[0] == 'e') {
+          yylval = num;
+          return NUMBER;
+        }
+
+        return ERROR;
       }
-      break;
   }
-  return node;
 }
