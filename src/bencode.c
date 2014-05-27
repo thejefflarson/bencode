@@ -11,7 +11,7 @@ be_node_t *
 be_decode(){
   be_node_t node = calloc(1, sizeof(be_node_t));
   if(node == NULL) return node;
-  yyparse(node);
+  bencode_parse(node);
   return node;
 }
 
