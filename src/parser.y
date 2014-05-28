@@ -4,7 +4,7 @@
 #include "scanner.h"
 
 void
-bencode_error(YYLTYPE *llocp, const char *buf, const char *msg);
+bencode_error(YYLTYPE *llocp, const char *buf, long length, const char *msg);
 %}
 
 %code provides {
@@ -26,8 +26,8 @@ bencode_error(YYLTYPE *llocp, const char *buf, const char *msg);
 %token INT
 %token NUMBER
 
-%parse-param {const char *buf}
-%lex-param {const char *buf}
+%parse-param {const char *buf} {long length}
+%lex-param   {const char *buf} {long length}
 
 %type <be_node_t *> member;
 
@@ -68,6 +68,7 @@ member:
 
 %%
 void
-bencode_error(YYLTYPE *llocp, const char *buf, const char *msg){
+bencode_error(YYLTYPE *llocp, const char *buf, long length, const char *msg){
+  length = 0;
   printf("error parsing %s at character %i: %s", buf, llocp->first_column, msg);
 }

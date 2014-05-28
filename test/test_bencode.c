@@ -53,20 +53,23 @@
 static void
 test_scanner(){
   char *str = "l7:tolstoyi42ee";
-  int codes[] = {LIST, STRING, INT, NUMBER, END, END};
+
   be_node_t node;
   memset(&node, 0, sizeof(be_node_t));
   YYLTYPE pos;
   memset(&pos, 0, sizeof(YYLTYPE));
 
-  for(size_t i = 0; i < sizeof(codes) && (unsigned long)pos.first_column < strlen(str); i++){
-    int ret = bencode_lex(&node, &pos, str);
-    char *mess;
-    asprintf(&mess, "ok value %i == %i", ret, codes[i]);
-    ok(ret == codes[i], mess);
-    free(mess);
-    pos.first_column = pos.last_column;
-  }
+  ok(bencode_lex(&node, &pos, str, strlen(str)) == LIST, "LIST");
+  pos.first_column = pos.last_column;
+  ok(bencode_lex(&node, &pos, str, strlen(str)) == STRING, "STRING");
+  pos.first_column = pos.last_column;
+  ok(bencode_lex(&node, &pos, str, strlen(str)) == INT, "INT");
+  pos.first_column = pos.last_column;
+  ok(bencode_lex(&node, &pos, str, strlen(str)) == NUMBER, "NUMBER");
+  pos.first_column = pos.last_column;
+  ok(bencode_lex(&node, &pos, str, strlen(str)) == END, "END");
+  pos.first_column = pos.last_column;
+  ok(bencode_lex(&node, &pos, str, strlen(str)) == END, "END");
 }
 
 int
