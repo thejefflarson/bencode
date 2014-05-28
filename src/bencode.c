@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "bencode.h"
 
-extern int bencode_parse(const char *buf, size_t length);
+extern int bencode_parse(be_node_t *node, const char *buf, size_t length);
 
 // Make this a proper scanner that feeds into bison
 be_node_t *

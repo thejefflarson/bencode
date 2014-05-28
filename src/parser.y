@@ -12,7 +12,6 @@ bencode_error(YYLTYPE *llocp, const char *buf, long length, const char *msg);
   #define YYSTYPE be_node_t
 }
 
-/* for bison 2.3, which is default on os x, guh */
 %require "3.0"
 %define api.pure full
 %locations
@@ -26,15 +25,15 @@ bencode_error(YYLTYPE *llocp, const char *buf, long length, const char *msg);
 %token INT
 %token NUMBER
 
-%parse-param {const char *buf} {long length}
+%parse-param {be_node_t **node} {const char *buf} {long length}
 %lex-param   {const char *buf} {long length}
 
-%type <be_node_t *> member;
+%type <node.val> member;
 
 %%
 
 bencode:
-  member
+  member { node = $1; }
 ;
 
 list:
@@ -42,8 +41,8 @@ list:
 ;
 
 list_value:
-  member
-| member list_value
+  member { $$ = $1; }
+| member list_value { $$ = be_node_new(BE_DICT); }
 ;
 
 dict:
@@ -51,19 +50,19 @@ dict:
 ;
 
 dict_value:
-  STRING member
-| STRING member dict_value
+  STRING member { $$ = $1; }
+| STRING member dict_value { $$ = be_node_new(BE_DICT); }
 ;
 
 integer:
-  INT NUMBER END
+  INT NUMBER END { $$ = $1; }
 ;
 
 member:
-  integer
-| STRING
-| dict
-| list
+  integer { $$ = be_node_new(BE_INT);  }
+| STRING  { $$ = be_node_new(BE_STR);  }
+| dict    { $$ = be_node_new(BE_DICT); }
+| list    { $$ = be_node_new(BE_LIST); }
 ;
 
 %%

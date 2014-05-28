@@ -37,6 +37,10 @@ typedef struct be_node {
   } val;
 } be_node_t;
 
+
+be_node_t *
+be_node_new();
+
 be_node_t *
 be_decode(const char *str, uint64_t size);
 
