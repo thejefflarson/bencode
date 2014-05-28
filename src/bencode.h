@@ -10,10 +10,10 @@ typedef enum {
   BE_DICT
 } be_type;
 
-typedef struct be_node be_node_t;
+struct be_node;
 
 typedef struct be_list_node {
-  be_node_t *node;
+  struct be_node *node;
   struct be_list_node *next;
 } be_list_node_t;
 
@@ -24,10 +24,10 @@ typedef struct {
 
 typedef struct {
   char *key;
-  be_node_t *val;
+  struct be_node *val;
 } be_dict_value_t;
 
-struct be_node {
+typedef struct be_node {
   be_type type;
   union {
     long long i;

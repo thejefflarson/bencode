@@ -14,7 +14,7 @@ def configure(conf):
 
 
 def build(bld):
-    sources = bld.path.ant_glob(['src/bencode.c', 'scanner.l', 'src/parser.y'])
+    sources = bld.path.ant_glob(['src/bencode.c', 'src/scanner.c', 'src/parser.y'])
 
     bld.shlib(
         features='c cshlib',
