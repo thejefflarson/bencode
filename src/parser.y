@@ -12,6 +12,10 @@ bencode_error(YYLTYPE *llocp, const char *buf, long length, const char *msg);
   #define YYSTYPE be_node_t
 }
 
+/*
+  Newer software is better than older, we are going with 3.0, even though
+  2.3 is the default on OS X
+*/
 %require "3.0"
 %define api.pure full
 %locations
