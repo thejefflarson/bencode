@@ -6,14 +6,14 @@
 #include <stdio.h>
 #include "bencode.h"
 
-extern int bencode_parse(be_node_t *node, const char *buf, size_t length);
+extern int bencode_parse(be_node_t **node, const char *buf, size_t length);
 
 // Make this a proper scanner that feeds into bison
 be_node_t *
-be_decode(){
-  be_node_t *node = calloc(1, sizeof(be_node_t));
+be_decode(const char *str, uint64_t size){
+  be_node_t *node = NULL;
   if(node == NULL) return node;
-  bencode_parse("", 1);
+  bencode_parse(&node, str, size);
   return node;
 }
 
