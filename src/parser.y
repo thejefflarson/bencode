@@ -32,12 +32,10 @@ bencode_error(YYLTYPE *llocp, const char *buf, long length, const char *msg);
 %parse-param {be_node_t **node} {const char *buf} {long length}
 %lex-param   {const char *buf} {long length}
 
-%type <node.val> member;
-
 %%
 
 bencode:
-  member { node = $1; }
+  member
 ;
 
 list:
@@ -45,8 +43,8 @@ list:
 ;
 
 list_value:
-  member { $$ = $1; }
-| member list_value { $$ = be_node_new(BE_DICT); }
+  member
+| member list_value
 ;
 
 dict:
@@ -54,19 +52,19 @@ dict:
 ;
 
 dict_value:
-  STRING member { $$ = $1; }
-| STRING member dict_value { $$ = be_node_new(BE_DICT); }
+  STRING member
+| STRING member dict_value
 ;
 
 integer:
-  INT NUMBER END { $$ = $1; }
+  INT NUMBER END
 ;
 
 member:
-  integer { $$ = be_node_new(BE_INT);  }
-| STRING  { $$ = be_node_new(BE_STR);  }
-| dict    { $$ = be_node_new(BE_DICT); }
-| list    { $$ = be_node_new(BE_LIST); }
+  integer
+| STRING
+| dict
+| list
 ;
 
 %%
