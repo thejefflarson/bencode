@@ -16,14 +16,14 @@
 
 #define start_test printf("1..%i\n", __COUNTER__)
 
-// static void
-// test_integer(){
-//   be_node_t *node = be_decode("i42e", 4);
-//   ok(node != NULL, "decoded integer without errors");
-//   ok(node->val.i == 42, "returned 42");
-//   ok(node->type == BE_INT, "returned an integer");
-//   be_free(node);
-// }
+static void
+test_integer(){
+  be_node_t *node = be_decode("i42e", 4);
+  ok(node != NULL, "decoded integer without errors");
+  ok(node->val.i == 42, "returned 42");
+  ok(node->type == BE_INT, "returned an integer");
+  be_free(node);
+}
 
 // static void
 // test_string(){
