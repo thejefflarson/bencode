@@ -9,7 +9,7 @@ bencode_error(YYLTYPE *llocp, be_node_t **node, const char *buf, long length, co
 
 %code requires {
   #include "bencode.h"
-  #define YYSTYPE be_node_t
+  #define YYSTYPE be_node_t*
 }
 
 /*
@@ -35,8 +35,6 @@ bencode_error(YYLTYPE *llocp, be_node_t **node, const char *buf, long length, co
 
 %lex-param {const char *buf}
 %lex-param {long length}
-
-%type <node> member
 
 
 %%
