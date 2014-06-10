@@ -61,10 +61,12 @@ test_scanner(){
   ok(bencode_lex(&node, &pos, str, strlen(str)) == LIST, "LIST");
   pos.first_column = pos.last_column;
   ok(bencode_lex(&node, &pos, str, strlen(str)) == STRING, "STRING");
+  ok(strncmp(node->val.str, "tolstoy", 7) == 0, "right string value");
   pos.first_column = pos.last_column;
   ok(bencode_lex(&node, &pos, str, strlen(str)) == INT, "INT");
   pos.first_column = pos.last_column;
   ok(bencode_lex(&node, &pos, str, strlen(str)) == NUMBER, "NUMBER");
+  ok(node->val.i == 42, "right integer value");
   pos.first_column = pos.last_column;
   ok(bencode_lex(&node, &pos, str, strlen(str)) == END, "END");
   pos.first_column = pos.last_column;
