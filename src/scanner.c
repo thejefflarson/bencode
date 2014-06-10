@@ -52,10 +52,11 @@ bencode_lex(YYSTYPE *yylval, YYLTYPE *llocp, const char *buf, long length){
           if(val == NULL)
             return 0;
 
-          yylval->val.str = val;
+
+          (*yylval)->val.str = val;
           return STRING;
         } else if(buf[llocp->last_column] == 'e') {
-          yylval->val.i = num;
+          (*yylval)->val.i = num;
           return NUMBER;
         }
 

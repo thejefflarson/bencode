@@ -54,8 +54,7 @@ static void
 test_scanner(){
   char *str = "l7:tolstoyi42ee";
 
-  be_node_t node;
-  memset(&node, 0, sizeof(be_node_t));
+  be_node_t *node = calloc(1, sizeof(be_node_t));
   YYLTYPE pos;
   memset(&pos, 0, sizeof(YYLTYPE));
 

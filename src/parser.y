@@ -9,7 +9,7 @@ bencode_error(YYLTYPE *llocp, be_node_t **node, const char *buf, long length, co
 
 %code requires {
   #include "bencode.h"
-  #define YYSTYPE be_node_t*
+  #define YYSTYPE be_node_t *
 }
 
 /*
